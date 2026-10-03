@@ -552,6 +552,164 @@
         gap: 30px;
       }
     }
+    /* =========================
+   INTERACCIONES
+========================= */
+
+.property-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--navy);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.property-btn:hover {
+  background: var(--navy-light);
+}
+
+
+/* MODALES */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 5000;
+}
+
+.modal.activo {
+  display: flex;
+}
+
+.modal-box {
+  background: white;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  position: relative;
+}
+
+.modal-box > img {
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+}
+
+.modal-info {
+  padding: 30px;
+}
+
+.modal-info h2 {
+  color: var(--navy);
+  font-size: 30px;
+  margin: 8px 0;
+}
+
+.modal-info p {
+  color: var(--muted);
+  margin: 12px 0;
+}
+
+.modal-precio {
+  color: var(--navy);
+  font-size: 25px;
+  font-weight: bold;
+  margin: 18px 0;
+}
+
+.modal-caracteristicas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.modal-caracteristicas span {
+  background: var(--gray);
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: var(--muted);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: white;
+  color: var(--navy);
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.formulario {
+  padding: 35px;
+}
+
+.formulario h2 {
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.formulario form {
+  display: grid;
+  gap: 13px;
+  margin-top: 20px;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+}
+
+.formulario textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus {
+  border-color: var(--gold);
+}
+
+
+@media (max-width:600px) {
+
+  .modal-box > img {
+    height: 220px;
+  }
+
+  .modal-info,
+  .formulario {
+    padding: 22px;
+  }
+
+  .modal-info h2 {
+    font-size: 25px;
+  }
+
+}
   </style>
 </head>
 
@@ -982,7 +1140,445 @@
   >
     ☎
   </a>
+<!-- MODAL DE PROPIEDAD -->
+<div class="modal" id="propertyModal">
+  <div class="modal-box">
 
+    <button class="modal-close" onclick="cerrarModal()">×</button>
+
+    <img id="modalImagen" src="" alt="Propiedad">
+
+    <div class="modal-info">
+      <div class="property-type" id="modalTipo"></div>
+
+      <h2 id="modalTitulo"></h2>
+
+      <p id="modalUbicacion"></p>
+
+      <div class="modal-precio" id="modalPrecio"></div>
+
+      <div class="modal-caracteristicas" id="modalCaracteristicas"></div>
+
+      <p id="modalDescripcion"></p>
+
+      <button
+        class="btn-primary"
+        id="modalWhatsApp"
+        type="button">
+        💬 Solicitar información
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- FORMULARIO DE CONTACTO -->
+<div class="modal" id="contactModal">
+
+  <div class="modal-box formulario">
+
+    <button class="modal-close" onclick="cerrarContacto()">×</button>
+
+    <div class="eyebrow">
+      KEY'S INMOBILIARIA
+    </div>
+
+    <h2>¿Qué propiedad estás buscando?</h2>
+
+    <p>
+      Déjanos tus datos y te ayudamos a encontrar una opción.
+    </p>
+
+    <form id="formContacto">
+
+      <input
+        type="text"
+        id="nombre"
+        placeholder="Tu nombre"
+        required>
+
+      <input
+        type="tel"
+        id="telefono"
+        placeholder="WhatsApp"
+        required>
+
+      <select id="interes" required>
+
+        <option value="">
+          ¿Qué estás buscando?
+        </option>
+
+        <option value="Comprar">
+          Comprar
+        </option>
+
+        <option value="Rentar">
+          Rentar
+        </option>
+
+        <option value="Invertir">
+          Invertir
+        </option>
+
+        <option value="Publicar propiedad">
+          Publicar mi propiedad
+        </option>
+
+      </select>
+
+      <textarea
+        id="mensaje"
+        placeholder="Cuéntanos qué estás buscando">
+      </textarea>
+
+      <button
+        type="submit"
+        class="btn-primary">
+        Enviar por WhatsApp
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const whatsappKey =
+  "524427768795";
+
+
+/* =========================
+   DATOS DE PROPIEDADES
+========================= */
+
+const propiedades = {
+
+  "Casa moderna en Zibatá": {
+
+    tipo: "Casa · Venta",
+
+    ubicacion:
+      "📍 Zibatá, Querétaro",
+
+    precio:
+      "$3,250,000 MXN",
+
+    imagen:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
+
+    caracteristicas: [
+      "🛏️ 3 habitaciones",
+      "🚿 2.5 baños",
+      "🚗 2 estacionamientos"
+    ],
+
+    descripcion:
+      "Casa moderna ubicada en Zibatá. Una excelente opción para vivir o invertir en Querétaro."
+
+  },
+
+
+  "Residencia en El Refugio": {
+
+    tipo: "Casa · Venta",
+
+    ubicacion:
+      "📍 El Refugio, Querétaro",
+
+    precio:
+      "$3,480,000 MXN",
+
+    imagen:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85",
+
+    caracteristicas: [
+      "🛏️ 3 habitaciones",
+      "🚿 3 baños",
+      "🚗 2 estacionamientos"
+    ],
+
+    descripcion:
+      "Residencia ubicada en El Refugio, con espacios amplios y excelente ubicación."
+
+  },
+
+
+  "Departamento en Juriquilla": {
+
+    tipo: "Departamento · Renta",
+
+    ubicacion:
+      "📍 Juriquilla, Querétaro",
+
+    precio:
+      "$18,500 MXN / mes",
+
+    imagen:
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85",
+
+    caracteristicas: [
+      "🛏️ 2 habitaciones",
+      "🚿 2 baños",
+      "🚗 2 estacionamientos"
+    ],
+
+    descripcion:
+      "Departamento moderno en Juriquilla, ideal para vivir en una zona consolidada de Querétaro."
+
+  }
+
+};
+
+
+/* =========================
+   ABRIR PROPIEDAD
+========================= */
+
+function abrirPropiedad(nombre) {
+
+  const propiedad =
+    propiedades[nombre];
+
+  if (!propiedad) return;
+
+
+  document.getElementById("modalImagen").src =
+    propiedad.imagen;
+
+  document.getElementById("modalTipo").textContent =
+    propiedad.tipo;
+
+  document.getElementById("modalTitulo").textContent =
+    nombre;
+
+  document.getElementById("modalUbicacion").textContent =
+    propiedad.ubicacion;
+
+  document.getElementById("modalPrecio").textContent =
+    propiedad.precio;
+
+  document.getElementById("modalDescripcion").textContent =
+    propiedad.descripcion;
+
+
+  const caracteristicas =
+    document.getElementById(
+      "modalCaracteristicas"
+    );
+
+  caracteristicas.innerHTML = "";
+
+
+  propiedad.caracteristicas.forEach(item => {
+
+    const span =
+      document.createElement("span");
+
+    span.textContent = item;
+
+    caracteristicas.appendChild(span);
+
+  });
+
+
+  document.getElementById(
+    "modalWhatsApp"
+  ).onclick = function() {
+
+    const texto =
+      `Hola Key's Inmobiliaria, me interesa la propiedad "${nombre}". ¿Me pueden dar más información?`;
+
+    window.open(
+      `https://wa.me/${whatsappKey}?text=${encodeURIComponent(texto)}`,
+      "_blank"
+    );
+
+  };
+
+
+  document
+    .getElementById("propertyModal")
+    .classList.add("activo");
+
+}
+
+
+/* =========================
+   CERRAR PROPIEDAD
+========================= */
+
+function cerrarModal() {
+
+  document
+    .getElementById("propertyModal")
+    .classList.remove("activo");
+
+}
+
+
+/* =========================
+   CONTACTO
+========================= */
+
+function abrirContacto() {
+
+  document
+    .getElementById("contactModal")
+    .classList.add("activo");
+
+}
+
+
+function cerrarContacto() {
+
+  document
+    .getElementById("contactModal")
+    .classList.remove("activo");
+
+}
+
+
+/* =========================
+   BOTONES VER PROPIEDAD
+========================= */
+
+document
+  .querySelectorAll(".property-card")
+  .forEach(card => {
+
+    const boton =
+      document.createElement("button");
+
+    boton.textContent =
+      "Ver propiedad";
+
+    boton.type =
+      "button";
+
+    boton.className =
+      "property-btn";
+
+    const nombre =
+      card.querySelector(
+        ".property-title"
+      ).textContent.trim();
+
+
+    boton.onclick = function() {
+
+      abrirPropiedad(nombre);
+
+    };
+
+
+    card
+      .querySelector(".property-body")
+      .appendChild(boton);
+
+  });
+
+
+/* =========================
+   BOTONES ME INTERESA
+========================= */
+
+document
+  .querySelectorAll(".property-card")
+  .forEach(card => {
+
+    card.addEventListener(
+      "dblclick",
+      function() {
+
+        abrirContacto();
+
+      }
+    );
+
+  });
+
+
+/* =========================
+   FORMULARIO
+========================= */
+
+document
+  .getElementById("formContacto")
+  .addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+
+      const nombre =
+        document
+          .getElementById("nombre")
+          .value;
+
+      const telefono =
+        document
+          .getElementById("telefono")
+          .value;
+
+      const interes =
+        document
+          .getElementById("interes")
+          .value;
+
+      const mensaje =
+        document
+          .getElementById("mensaje")
+          .value;
+
+
+      const texto =
+
+        `Hola Key's Inmobiliaria.%0A%0A` +
+
+        `Nombre: ${nombre}%0A` +
+
+        `WhatsApp: ${telefono}%0A` +
+
+        `Interés: ${interes}%0A` +
+
+        `Mensaje: ${mensaje}`;
+
+
+      window.open(
+        `https://wa.me/${whatsappKey}?text=${texto}`,
+        "_blank"
+      );
+
+    }
+  );
+
+
+/* =========================
+   CERRAR CON ESC
+========================= */
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (event.key === "Escape") {
+
+      cerrarModal();
+
+      cerrarContacto();
+
+    }
+
+  }
+);
+
+</script>
 
 </body>
 </html>
