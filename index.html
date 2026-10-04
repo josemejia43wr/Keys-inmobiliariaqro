@@ -466,9 +466,7 @@ footer strong{
 <header>
   <div class="logo">Key's <span>Inmobiliaria</span></div>
 
-  <button class="header-btn" onclick="openLogin()">
-    🔐 Administrador
-  </button>
+<button type="button" onclick="openLogin()">🔐 Administrador</button>
 </header>
 
 <section class="hero">
@@ -1206,11 +1204,15 @@ function contactWhatsApp(id){
 ========================================================= */
 
 function openLogin(){
+  const modal = document.getElementById("loginModal");
+
+  if (!modal) {
+    alert("No se encontró la ventana de administrador.");
+    return;
+  }
 
   document.getElementById("loginMessage").textContent = "";
-
-  document.getElementById("loginModal").style.display =
-    "block";
+  modal.style.display = "block";
 }
 
 
