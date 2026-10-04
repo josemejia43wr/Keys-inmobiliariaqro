@@ -10,7 +10,14 @@
 content="Key's Inmobiliaria. Encuentra casas, departamentos y terrenos en Querétaro. Nosotros somos la llave.">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 <style>
 *{
   box-sizing:border-box;
@@ -430,6 +437,27 @@ footer strong{
     padding:15px;
   }
 }
+  .map-section {
+  margin-top: 25px;
+}
+
+.map-section h3 {
+  margin-bottom: 8px;
+}
+
+.map-notice {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+#propertyMap {
+  width: 100%;
+  height: 300px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
 </style>
 </head>
 
@@ -547,7 +575,16 @@ footer strong{
       <div class="features" id="modalFeatures"></div>
 
       <p id="modalDescription"></p>
+<div class="map-section">
+  <h3>📍 Ubicación aproximada</h3>
 
+  <p class="map-notice">
+    La ubicación mostrada es aproximada por privacidad y seguridad.
+    La dirección exacta se proporciona al agendar una visita.
+  </p>
+
+  <div id="propertyMap"></div>
+</div>
       <a
         id="modalWhatsApp"
         class="btn btn-whatsapp"
@@ -744,7 +781,40 @@ footer strong{
         placeholder="Describe la propiedad..."></textarea>
 
     </div>
+    <div class="form-group">
 
+      <label>📍 Ubicación aproximada</label>
+
+      <input
+        id="propertyLocationLabel"
+        type="text"
+        placeholder="Ej. Cumbres del Lago, Querétaro">
+
+      <input
+        id="propertyLatitude"
+        type="number"
+        step="any"
+        placeholder="Latitud aproximada">
+
+      <input
+        id="propertyLongitude"
+        type="number"
+        step="any"
+        placeholder="Longitud aproximada">
+
+      <input
+        id="propertyLocationRadius"
+        type="number"
+        min="100"
+        max="3000"
+        value="500"
+        placeholder="Radio de privacidad en metros">
+
+      <small>
+        Por privacidad, utiliza una ubicación aproximada y no la dirección exacta.
+      </small>
+
+    </div>
     <div class="form-group">
 
       <label>Fotografías</label>
@@ -1063,6 +1133,71 @@ function openProperty(id){
 
     `).join("");
 
+    // MAPA DE UBICACIÓN APROXIMADA
+  const mapContainer = document.getElementById("propertyMap");
+
+  if (mapContainer) {
+
+    if (window.propertyMapInstance) {
+      window.propertyMapInstance.remove();
+      window.propertyMapInstance = null;
+    }
+
+    mapContainer.innerHTML = "";
+
+    if (p.latitude && p.longitude) {
+
+      const lat = Number(p.latitude);
+      const lng = Number(p.longitude);
+      const radius = Number(p.location_radius) || 500;
+
+      window.propertyMapInstance = L.map("propertyMap", {
+        scrollWheelZoom: false
+      }).setView([lat, lng], 14);
+
+      L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "&copy; OpenStreetMap contributors"
+        }
+      ).addTo(window.propertyMapInstance);
+
+      L.circle([lat, lng], {
+        radius: radius
+      }).addTo(window.propertyMapInstance);
+
+      L.marker([lat, lng])
+        .addTo(window.propertyMapInstance)
+        .bindPopup(
+          `<strong>📍 Ubicación aproximada</strong><br>
+           ${escapeHtml(p.location_label || "Zona aproximada")}`
+        )
+        .openPopup();
+
+      setTimeout(() => {
+        window.propertyMapInstance.invalidateSize();
+      }, 200);
+
+    } else {
+
+      mapContainer.innerHTML = `
+        <div style="
+          height:100%;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          padding:20px;
+          background:#f5f5f5;
+          border-radius:14px;
+          color:#666;
+        ">
+          📍 La ubicación aproximada estará disponible próximamente.
+        </div>
+      `;
+    }
+  }
+
   document.getElementById("modalWhatsApp").href =
     whatsappLink(p.title);
 
@@ -1309,6 +1444,11 @@ async function saveProperty(){
 
   const description =
     document.getElementById("propertyDescription").value.trim();
+  
+location_label: document.getElementById("propertyLocationLabel").value.trim(),
+latitude: parseFloat(document.getElementById("propertyLatitude").value) || null,
+longitude: parseFloat(document.getElementById("propertyLongitude").value) || null,
+location_radius: parseInt(document.getElementById("propertyLocationRadius").value) || 500,
 
   const published =
     document.getElementById("propertyPublished").checked;
@@ -1497,6 +1637,18 @@ async function editProperty(id){
 
   document.getElementById("propertyDescription").value =
     data.description;
+
+    document.getElementById("propertyLocationLabel").value =
+    data.location_label || "";
+
+  document.getElementById("propertyLatitude").value =
+    data.latitude ?? "";
+
+  document.getElementById("propertyLongitude").value =
+    data.longitude ?? "";
+
+  document.getElementById("propertyLocationRadius").value =
+    data.location_radius || 500;
 
   document.getElementById("propertyPublished").checked =
     data.published;
