@@ -1690,60 +1690,93 @@ footer a{
     const searchResult = document.getElementById("searchResult");
     const noResults = document.getElementById("noResults");
 
+function buscarPropiedades(){
 
-    function filterProperties() {
+    const operacion =
+        document.getElementById("operacion").value;
 
-      const operation = operationFilter.value;
-      const zone = zoneFilter.value;
-      const type = typeFilter.value;
+    const zona =
+        document.getElementById("zona").value;
 
-      const cards =
+    const tipo =
+        document.getElementById("tipo").value;
+
+    const recamaras =
+        parseInt(document.getElementById("recamaras").value) || 0;
+
+    const precioMax =
+        parseFloat(document.getElementById("precioMax").value) || 0;
+
+    const tarjetas =
         document.querySelectorAll(".property-card");
 
-      let visible = 0;
+    let encontrados = 0;
 
-      cards.forEach(card => {
+    tarjetas.forEach(tarjeta => {
 
-        const matchesOperation =
-          operation === "todos" ||
-          card.dataset.operation === operation;
+        const coincideOperacion =
+            operacion === "todas" ||
+            tarjeta.dataset.operacion === operacion;
 
-        const matchesZone =
-          zone === "todos" ||
-          card.dataset.zone === zone;
+        const coincideZona =
+            zona === "todas" ||
+            tarjeta.dataset.zona === zona;
 
-        const matchesType =
-          type === "todos" ||
-          card.dataset.type === type;
+        const coincideTipo =
+            tipo === "todos" ||
+            tarjeta.dataset.tipo === tipo;
 
-        const show =
-          matchesOperation &&
-          matchesZone &&
-          matchesType;
+        const recamarasPropiedad =
+            parseInt(tarjeta.dataset.recamaras) || 0;
 
-        card.style.display = show ? "" : "none";
+        const precioPropiedad =
+            parseFloat(tarjeta.dataset.precio) || 0;
 
-        if (show) visible++;
+        const coincideRecamaras =
+            recamaras === 0 ||
+            recamarasPropiedad >= recamaras;
 
-      });
+        const coincidePrecio =
+            precioMax === 0 ||
+            precioPropiedad <= precioMax;
 
-      noResults.style.display =
-        visible === 0 ? "block" : "none";
+        if(
+            coincideOperacion &&
+            coincideZona &&
+            coincideTipo &&
+            coincideRecamaras &&
+            coincidePrecio
+        ){
 
-      searchResult.style.display = "block";
+            tarjeta.style.display = "";
 
-      searchResult.textContent =
-        visible === 0
-          ? "No encontramos propiedades con esos filtros."
-          : `${visible} propiedad${visible !== 1 ? "es" : ""} encontrada${visible !== 1 ? "s" : ""}.`;
+            encontrados++;
 
-      document.getElementById("catalogo").scrollIntoView({
-        behavior: "smooth"
-      });
+        }else{
+
+            tarjeta.style.display = "none";
+
+        }
+
+    });
+
+    document
+        .getElementById("catalogo")
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
+    if(encontrados === 0){
+
+        alert(
+            "No encontramos propiedades con esos filtros. " +
+            "Contáctanos y buscamos una opción para ti."
+        );
 
     }
 
-
+}
+    
     searchButton.addEventListener("click", filterProperties);
 
 
