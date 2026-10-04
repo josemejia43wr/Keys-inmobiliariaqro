@@ -575,15 +575,7 @@ footer strong{
       <div class="features" id="modalFeatures"></div>
 
       <p id="modalDescription"></p>
-<div class="map-section">
-  <h3>📍 Ubicación aproximada</h3>
 
-  <p class="map-notice">
-    La ubicación mostrada es aproximada por privacidad y seguridad.
-    La dirección exacta se proporciona al agendar una visita.
-  </p>
-
-  <div id="propertyMap"></div>
 </div>
       <a
         id="modalWhatsApp"
@@ -781,40 +773,7 @@ footer strong{
         placeholder="Describe la propiedad..."></textarea>
 
     </div>
-    <div class="form-group">
-
-      <label>📍 Ubicación aproximada</label>
-
-      <input
-        id="propertyLocationLabel"
-        type="text"
-        placeholder="Ej. Cumbres del Lago, Querétaro">
-
-      <input
-        id="propertyLatitude"
-        type="number"
-        step="any"
-        placeholder="Latitud aproximada">
-
-      <input
-        id="propertyLongitude"
-        type="number"
-        step="any"
-        placeholder="Longitud aproximada">
-
-      <input
-        id="propertyLocationRadius"
-        type="number"
-        min="100"
-        max="3000"
-        value="500"
-        placeholder="Radio de privacidad en metros">
-
-      <small>
-        Por privacidad, utiliza una ubicación aproximada y no la dirección exacta.
-      </small>
-
-    </div>
+    
     <div class="form-group">
 
       <label>Fotografías</label>
@@ -1444,11 +1403,6 @@ async function saveProperty(){
 
   const description =
     document.getElementById("propertyDescription").value.trim();
-  
-location_label: document.getElementById("propertyLocationLabel").value.trim(),
-latitude: parseFloat(document.getElementById("propertyLatitude").value) || null,
-longitude: parseFloat(document.getElementById("propertyLongitude").value) || null,
-location_radius: parseInt(document.getElementById("propertyLocationRadius").value) || 500,
 
   const published =
     document.getElementById("propertyPublished").checked;
