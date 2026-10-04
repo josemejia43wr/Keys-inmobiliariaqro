@@ -835,84 +835,54 @@ footer a{
     <div class="search-title">
         Encuentra una propiedad
     </div>
+<div class="search-grid">
 
-    <div class="search-grid">
+    <select id="operacion" class="search-field">
+        <option value="todas">Comprar o rentar</option>
+        <option value="venta">Comprar</option>
+        <option value="renta">Rentar</option>
+    </select>
 
-        <select id="operacion" class="search-field">
+    <select id="zona" class="search-field">
+        <option value="todas">Todas las zonas</option>
+        <option value="zibata">Zibatá</option>
+        <option value="zakia">Zakia</option>
+        <option value="juriquilla">Juriquilla</option>
+        <option value="refugio">El Refugio</option>
+        <option value="marques">El Marqués</option>
+    </select>
 
-            <option value="todas">
-                Comprar o rentar
-            </option>
+    <select id="tipo" class="search-field">
+        <option value="todos">Tipo de propiedad</option>
+        <option value="casa">Casa</option>
+        <option value="departamento">Departamento</option>
+        <option value="terreno">Terreno</option>
+    </select>
 
-            <option value="venta">
-                Comprar
-            </option>
+    <select id="recamaras" class="search-field">
+        <option value="0">Recámaras</option>
+        <option value="1">1+</option>
+        <option value="2">2+</option>
+        <option value="3">3+</option>
+        <option value="4">4+</option>
+    </select>
 
-            <option value="renta">
-                Rentar
-            </option>
+    <input
+        id="precioMax"
+        class="search-field"
+        type="number"
+        placeholder="Precio máximo"
+    >
 
-        </select>
+    <button
+        class="search-button"
+        onclick="buscarPropiedades()"
+    >
+        🔎 Buscar propiedades
+    </button>
 
+</div>
 
-        <select id="zona" class="search-field">
-
-            <option value="todas">
-                Todas las zonas
-            </option>
-
-            <option value="zibata">
-                Zibatá
-            </option>
-
-            <option value="zakia">
-                Zakia
-            </option>
-
-            <option value="juriquilla">
-                Juriquilla
-            </option>
-
-            <option value="refugio">
-                El Refugio
-            </option>
-
-            <option value="marques">
-                El Marqués
-            </option>
-
-        </select>
-
-
-        <select id="tipo" class="search-field">
-
-            <option value="todos">
-                Todos los tipos
-            </option>
-
-            <option value="casa">
-                Casa
-            </option>
-
-            <option value="departamento">
-                Departamento
-            </option>
-
-            <option value="terreno">
-                Terreno
-            </option>
-
-        </select>
-
-
-        <button
-            class="search-button"
-            onclick="buscarPropiedades()"
-        >
-            🔎 Buscar propiedades
-        </button>
-
-    </div>
 
 </div>
 
